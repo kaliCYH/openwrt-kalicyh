@@ -21,8 +21,6 @@ on:
         required: false
         default: 'false'
 
-env:
-  TZ: Asia/Shanghai
   
 jobs:
   build:
@@ -44,10 +42,6 @@ jobs:
         run: |
           git clone https://github.com/coolsnowwolf/lede
           mv ./lede/* ./
-      - name: 更改时区、生成编译时间
-      run: |
-        sudo timedatectl set-timezone "$TZ"
-        echo "FILE_DATE=_$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_ENV
       - name: Install addons
         run: |
           echo "src-git helloworld https://github.com/fw876/helloworld" >> ./feeds.conf.default 
