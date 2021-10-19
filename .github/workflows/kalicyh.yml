@@ -12,14 +12,6 @@
 
 name: kalicyh
 
-#on:
-#  push:
-#    branches: 
-#      - master
-#  schedule:
-#    - cron: 0 */12 * * *
-#  watch:
-#    types: started
 on:
   repository_dispatch:
   workflow_dispatch:
