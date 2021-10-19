@@ -21,13 +21,16 @@ on:
         required: false
         default: 'false'
 
+env:
+  TZ: Asia/Shanghai
+  
 jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-      - name: Checkout
+      - name: 校验本地文件
         uses: actions/checkout@master
       - name: Initialization environment
         env:
@@ -41,6 +44,10 @@ jobs:
         run: |
           git clone https://github.com/coolsnowwolf/lede
           mv ./lede/* ./
+      - name: 更改时区、生成编译时间
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+        echo "FILE_DATE=_$(date +"%Y.%m.%d.%H.%M")" >> $GITHUB_ENV
       - name: Install addons
         run: |
           echo "src-git helloworld https://github.com/fw876/helloworld" >> ./feeds.conf.default 
@@ -119,12 +126,12 @@ jobs:
           
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
-      - name: Download package source code
+      - name: 下载软件包
         run: |
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
-      - name: Compile firmware
+      - name: 编译固件
         run: |
           echo -e "$(nproc) thread build."
           make -j$(nproc) V=s
